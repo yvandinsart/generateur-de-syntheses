@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DIN'S SYNTHÈSES</title>
+<style>
+:root{--navy:#1F4E79;--blue:#2F75B5;--green:#70AD47;--bg:#f4f6f8;--text:#1f1f1f;--muted:#64717d}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
+header{background:var(--navy);color:#fff;padding:22px 28px}header h1{margin:0;font-size:30px}header p{margin:7px 0 0;font-size:15px;opacity:.92}
+main{max-width:1180px;margin:0 auto;padding:30px 20px}.intro{background:#fff;border-radius:16px;padding:20px 22px;margin-bottom:22px;box-shadow:0 2px 10px #0001}.intro h2{margin:0 0 8px;color:var(--navy);font-size:22px}.intro p{margin:0;line-height:1.5;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.card{background:#fff;border:1px solid #d7e0e8;border-radius:18px;padding:26px;text-decoration:none;color:inherit;box-shadow:0 3px 13px #0001;transition:.15s transform,.15s box-shadow}.card:hover{transform:translateY(-2px);box-shadow:0 8px 22px #0002}.icon{font-size:43px;line-height:1}.card h2{font-size:24px;margin:12px 0 8px;color:var(--navy)}.card p{margin:0 0 18px;color:var(--muted);line-height:1.45}.badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}.badge{font-size:12px;border-radius:999px;padding:6px 9px;background:#eaf3fb;color:var(--blue);font-weight:700}.badge.green{background:#eef7ea;color:#4e8732}.cta{display:inline-block;background:var(--blue);color:white;border-radius:10px;padding:10px 14px;font-weight:700}.note{margin-top:24px;padding:14px 16px;border-left:4px solid var(--green);background:#fff;border-radius:8px;color:var(--muted);font-size:13px;line-height:1.5}footer{text-align:center;color:#7a858e;font-size:12px;padding:22px}
+.update-panel{margin:0 0 22px;background:#fff;border:1px solid #cfdbe6;border-radius:16px;padding:20px 22px;box-shadow:0 2px 10px #0001}.update-panel h2{margin:0 0 8px;color:var(--navy);font-size:22px}.update-panel p{margin:0 0 14px;color:var(--muted);line-height:1.5}.update-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.btn{appearance:none;border:0;border-radius:10px;padding:11px 15px;font:700 14px Arial,sans-serif;cursor:pointer}.btn.primary{background:var(--blue);color:#fff}.btn.secondary{background:#eaf3fb;color:var(--navy);border:1px solid #c9ddec}.btn:disabled{opacity:.5;cursor:not-allowed}.status{margin-top:14px;padding:11px 13px;border-radius:9px;background:#f5f7f9;color:#53606b;font-size:13px;line-height:1.45}.status.ok{background:#eef7ea;color:#3d7228}.status.error{background:#fff0f0;color:#9a2d2d}.status.warn{background:#fff8e6;color:#805f12}.small{font-size:12px;color:#77838d;margin-top:9px}.filepick{display:none}.github-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:14px 0}.github-grid label{font-size:12px;font-weight:700;color:var(--navy)}.github-grid input{width:100%;margin-top:5px;padding:10px 11px;border:1px solid #c9d3dd;border-radius:9px;font:14px Arial,sans-serif;background:#fff}.remember{display:block;margin-top:10px;font-size:12px;color:#5e6a74}.helpbox{margin-top:12px;font-size:12px;color:#5e6a74}.helpbox summary{cursor:pointer;font-weight:700;color:var(--navy)}.helpbox p{margin:8px 0 0!important}.mono{font-family:Consolas,monospace}@media(max-width:720px){.grid{grid-template-columns:1fr}header h1{font-size:25px}.update-actions{align-items:stretch}.btn{width:100%}}
+</style>
+</head>
+<body>
+<header><h1>DIN'S SYNTHÈSES</h1><p>Bibliothèque pédagogique P5–P6</p></header>
+<main>
+<section class="intro"><h2>Choisir une matière</h2><p>Les bibliothèques de Sciences, Mathématiques, Français, Histoire et Géographie sont réunies dans une seule application. Les PowerPoint restent séparés et modifiables.</p></section>
+
+<section class="update-panel" id="updatePanel">
+  <h2>☁️ Mise à jour des synthèses via GitHub</h2>
+  <p>Après avoir modifié une synthèse dans PowerPoint, vous pouvez remplacer directement la version stockée dans votre dépôt GitHub. La nouvelle version sera alors disponible depuis tous vos PC.</p>
+
+  <div class="github-grid">
+    <label>Propriétaire GitHub<input id="ghOwner" type="text" autocomplete="off" placeholder="ex. yvandinsart"></label>
+    <label>Dépôt<input id="ghRepo" type="text" autocomplete="off" placeholder="ex. dins-syntheses"></label>
+    <label>Branche<input id="ghBranch" type="text" autocomplete="off" value="main" placeholder="main"></label>
+    <label>Jeton GitHub<input id="ghToken" type="password" autocomplete="off" placeholder="github_pat_…"></label>
+  </div>
+
+  <div class="update-actions">
+    <button class="btn secondary" id="detectRepoBtn" type="button">Détecter le dépôt</button>
+    <button class="btn secondary" id="testGitHubBtn" type="button">Tester la connexion</button>
+    <button class="btn primary" id="updateGitHubBtn" type="button">Mettre à jour un PowerPoint</button>
+    <input class="filepick" id="githubPptInput" type="file" accept=".ppt,.pptx,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation">
+  </div>
+
+  <div class="status" id="githubStatus">Renseignez votre dépôt GitHub et votre jeton d’accès. Sur GitHub Pages, le dépôt peut souvent être détecté automatiquement.</div>
+  <div class="small"><b>Sécurité :</b> le jeton n’est jamais écrit dans le fichier HTML ni envoyé ailleurs qu’à l’API GitHub. Il est mémorisé uniquement dans ce navigateur si vous cochez l’option ci-dessous.</div>
+  <label class="remember"><input id="rememberGitHub" type="checkbox"> Mémoriser les paramètres et le jeton sur ce PC</label>
+  <details class="helpbox"><summary>Comment créer le jeton GitHub ?</summary><p>Créez un <b>fine-grained personal access token</b> limité uniquement à ce dépôt avec la permission <b>Contents: Read and write</b>. Vous pourrez révoquer ce jeton à tout moment depuis GitHub.</p></details>
+</section>
+<section class="grid">
+<a class="card" href="sciences/index.html"><div class="icon">🔬</div><h2>Sciences</h2><p>Bibliothèque Sciences validée, avec lecture intégrée et PowerPoint modifiables.</p><div class="badges"><span class="badge">48 synthèses</span><span class="badge green">SC1 → SC48</span></div><span class="cta">Ouvrir Sciences</span></a>
+<a class="card" href="grandeurs/index.html"><div class="icon">📏</div><h2>Mathématiques — Grandeurs</h2><p>Grandeurs, mesures, fractions de grandeurs, proportionnalité et échelles.</p><div class="badges"><span class="badge">25 synthèses</span><span class="badge green">GRAND01 → GRAND25</span></div><span class="cta">Ouvrir Grandeurs</span></a>
+<a class="card" href="nombres_operations/index.html"><div class="icon">🔢</div><h2>Mathématiques — Nombres & opérations</h2><p>Numération, nombres décimaux, calcul mental, opérations écrites et vérification.</p><div class="badges"><span class="badge">35 synthèses</span><span class="badge green">N01 → N21 · OP10.1 → OP10.13</span></div><span class="cta">Ouvrir Nombres & opérations</span></a>
+<a class="card" href="geometrie/index.html"><div class="icon">📐</div><h2>Mathématiques — Géométrie</h2><p>Repérage, figures, constructions, transformations, solides et symétrie.</p><div class="badges"><span class="badge">22 synthèses</span><span class="badge green">GEOM1 → GEOM22</span></div><span class="cta">Ouvrir Géométrie</span></a>
+<a class="card" href="donnees_competences/index.html"><div class="icon">📊</div><h2>Traitement de données & compétences</h2><p>Tableaux, diagrammes, logique et démarches méthodologiques pour résoudre et communiquer.</p><div class="badges"><span class="badge">16 synthèses</span><span class="badge green">D01 → D09 · M01 → M07</span></div><span class="cta">Ouvrir Données & compétences</span></a>
+<a class="card" href="francais/index.html"><div class="icon">📖</div><h2>Français</h2><p>Grammaire, orthographe, conjugaison et vocabulaire, avec lecture intégrée et PowerPoint modifiables.</p><div class="badges"><span class="badge">67 synthèses</span><span class="badge green">G1 → G17 · O1 → O19 · C1 → C16 · V1 → V15</span></div><span class="cta">Ouvrir Français</span></a>
+
+<a class="card" href="histoire/index.html"><div class="icon">🏛️</div><h2>Histoire</h2><p>Repères historiques, moments clés, personnages, faits marquants et méthodes de lecture du passé.</p><div class="badges"><span class="badge">28 synthèses</span><span class="badge green">HIS1 → HIS28</span></div><span class="cta">Ouvrir Histoire</span></a>
+<a class="card" href="geographie/index.html"><div class="icon">🌍</div><h2>Géographie</h2><p>Repères spatiaux, Belgique, monde, paysages, population, climat et développement durable.</p><div class="badges"><span class="badge">12 synthèses</span><span class="badge green">G1 → G12</span></div><span class="cta">Ouvrir Géographie</span></a>
+</section>
+<div class="note"><b>Utilisation multi-PC :</b> ouvrez DIN'S SYNTHÈSES depuis GitHub Pages. Les PowerPoint restent stockés dans le dépôt GitHub. Après modification, utilisez le panneau de mise à jour ci-dessus pour remplacer la version du dépôt. Tous vos PC accèdent ainsi à la même bibliothèque.</div>
+</main>
+<footer>DIN'S Synthèses · La classe de Monsieur Dinsart</footer>
+
+<script>
+(() => {
+  const ownerEl = document.getElementById('ghOwner');
+  const repoEl = document.getElementById('ghRepo');
+  const branchEl = document.getElementById('ghBranch');
+  const tokenEl = document.getElementById('ghToken');
+  const rememberEl = document.getElementById('rememberGitHub');
+  const detectBtn = document.getElementById('detectRepoBtn');
+  const testBtn = document.getElementById('testGitHubBtn');
+  const updateBtn = document.getElementById('updateGitHubBtn');
+  const input = document.getElementById('githubPptInput');
+  const status = document.getElementById('githubStatus');
+  const STORAGE_KEY = 'dins-syntheses-github-v1';
+
+  function esc(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+  function setStatus(html,type=''){status.className='status'+(type?' '+type:'');status.innerHTML=html;}
+  function config(){return {owner:ownerEl.value.trim(),repo:repoEl.value.trim(),branch:branchEl.value.trim()||'main',token:tokenEl.value.trim()};}
+  function validConfig(c){return c.owner&&c.repo&&c.branch&&c.token;}
+  function headers(c, json=true){const h={'Accept':'application/vnd.github+json','Authorization':'Bearer '+c.token,'X-GitHub-Api-Version':'2022-11-28'};if(json)h['Content-Type']='application/json';return h;}
+  function saveConfig(){
+    if(rememberEl.checked){localStorage.setItem(STORAGE_KEY,JSON.stringify(config()));}
+    else {localStorage.removeItem(STORAGE_KEY);sessionStorage.setItem(STORAGE_KEY,JSON.stringify(config()));}
+  }
+  function loadConfig(){
+    let raw=localStorage.getItem(STORAGE_KEY)||sessionStorage.getItem(STORAGE_KEY);
+    if(!raw)return;
+    try{const c=JSON.parse(raw);ownerEl.value=c.owner||'';repoEl.value=c.repo||'';branchEl.value=c.branch||'main';tokenEl.value=c.token||'';rememberEl.checked=!!localStorage.getItem(STORAGE_KEY);}catch(_){ }
+  }
+  function detectRepo(){
+    const host=location.hostname.toLowerCase();
+    const path=location.pathname.split('/').filter(Boolean);
+    if(host.endsWith('.github.io')){
+      ownerEl.value=host.split('.')[0];
+      if(path.length) repoEl.value=path[0];
+      else repoEl.value=ownerEl.value+'.github.io';
+      setStatus('Dépôt détecté depuis l’adresse GitHub Pages : <b>'+esc(ownerEl.value)+' / '+esc(repoEl.value)+'</b>. Vérifiez puis testez la connexion.','ok');
+      return true;
+    }
+    setStatus('Détection automatique impossible depuis cette adresse. Renseignez le propriétaire et le nom du dépôt manuellement.','warn');
+    return false;
+  }
+  async function ghFetch(url,options={}){
+    const c=config();
+    if(!validConfig(c)) throw new Error('Complétez le propriétaire, le dépôt, la branche et le jeton GitHub.');
+    const res=await fetch(url,{...options,headers:{...headers(c),...(options.headers||{})}});
+    let data=null;try{data=await res.json();}catch(_){ }
+    if(!res.ok){
+      const msg=data&&data.message?data.message:('Erreur GitHub HTTP '+res.status);
+      throw new Error(msg);
+    }
+    return data;
+  }
+  async function testConnection(){
+    const c=config();saveConfig();
+    setStatus('Test de la connexion GitHub…');
+    const repo=await ghFetch(`https://api.github.com/repos/${encodeURIComponent(c.owner)}/${encodeURIComponent(c.repo)}`);
+    const branch=await ghFetch(`https://api.github.com/repos/${encodeURIComponent(c.owner)}/${encodeURIComponent(c.repo)}/branches/${encodeURIComponent(c.branch)}`);
+    setStatus('✓ Connexion réussie à <b>'+esc(repo.full_name)+'</b>, branche <b>'+esc(branch.name)+'</b>. Le générateur est prêt à mettre à jour les PowerPoint.','ok');
+  }
+  async function getTree(){
+    const c=config();
+    const b=await ghFetch(`https://api.github.com/repos/${encodeURIComponent(c.owner)}/${encodeURIComponent(c.repo)}/branches/${encodeURIComponent(c.branch)}`);
+    const sha=b.commit.commit.tree.sha;
+    return await ghFetch(`https://api.github.com/repos/${encodeURIComponent(c.owner)}/${encodeURIComponent(c.repo)}/git/trees/${sha}?recursive=1`);
+  }
+  async function findPowerPointsByName(name){
+    const tree=await getTree();
+    if(tree.truncated) throw new Error('Le dépôt est trop volumineux pour une recherche complète automatique.');
+    const low=name.toLowerCase();
+    return (tree.tree||[]).filter(x=>x.type==='blob'&&x.path.split('/').pop().toLowerCase()===low&&/\.pptx?$/i.test(x.path));
+  }
+  async function getContent(path){
+    const c=config();
+    return await ghFetch(`https://api.github.com/repos/${encodeURIComponent(c.owner)}/${encodeURIComponent(c.repo)}/contents/${path.split('/').map(encodeURIComponent).join('/')}?ref=${encodeURIComponent(c.branch)}`);
+  }
+  function fileToBase64(file){
+    return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(String(r.result).split(',')[1]);r.onerror=()=>reject(r.error);r.readAsDataURL(file);});
+  }
+  function bytesToBase64(bytes){
+    let bin='';const chunk=0x8000;for(let i=0;i<bytes.length;i+=chunk)bin+=String.fromCharCode(...bytes.subarray(i,i+chunk));return btoa(bin);
+  }
+  async function downloadBlobBySha(sha){
+    const c=config();
+    return await ghFetch(`https://api.github.com/repos/${encodeURIComponent(c.owner)}/${encodeURIComponent(c.repo)}/git/blobs/${sha}`);
+  }
+  async function putContent(path, contentBase64, message, sha=null){
+    const c=config();
+    const body={message,content:contentBase64,branch:c.branch};if(sha)body.sha=sha;
+    return await ghFetch(`https://api.github.com/repos/${encodeURIComponent(c.owner)}/${encodeURIComponent(c.repo)}/contents/${path.split('/').map(encodeURIComponent).join('/')}`,{method:'PUT',body:JSON.stringify(body)});
+  }
+  function timestamp(){return new Date().toISOString().replace(/[:.]/g,'-');}
+  async function backupCurrent(match){
+    const blob=await downloadBlobBySha(match.sha);
+    if(!blob.content) throw new Error('Impossible de lire la version actuelle pour créer la sauvegarde.');
+    const clean=String(blob.content).replace(/\s/g,'');
+    const backupPath='_sauvegardes_github/'+timestamp()+'__'+match.path.replace(/\//g,'__');
+    await putContent(backupPath,clean,'Sauvegarde automatique avant mise à jour de '+match.path);
+    return backupPath;
+  }
+  async function updateSelectedFile(file){
+    if(!/\.pptx?$/i.test(file.name)) throw new Error('Le fichier choisi doit être un PowerPoint .ppt ou .pptx.');
+    saveConfig();
+    setStatus('Recherche de <b>'+esc(file.name)+'</b> dans le dépôt GitHub…');
+    const matches=await findPowerPointsByName(file.name);
+    if(matches.length===0) throw new Error('Aucun PowerPoint nommé « '+file.name+' » n’a été trouvé dans le dépôt. Conservez exactement le même nom de fichier pour une mise à jour automatique.');
+    let match=matches[0];
+    if(matches.length>1){
+      const txt=matches.map((m,i)=>(i+1)+' — '+m.path).join('\n');
+      const ans=prompt('Plusieurs fichiers portent ce nom. Tapez le numéro de celui à remplacer :\n\n'+txt,'1');
+      const idx=Number(ans)-1;
+      if(!Number.isInteger(idx)||idx<0||idx>=matches.length) throw new Error('Mise à jour annulée : fichier cible non valide.');
+      match=matches[idx];
+    }
+    const ok=confirm('Remplacer sur GitHub :\n'+match.path+'\n\npar :\n'+file.name+'\n\nUne sauvegarde de la version actuelle sera créée automatiquement.');
+    if(!ok){setStatus('Mise à jour annulée.','warn');return;}
+    updateBtn.disabled=true;testBtn.disabled=true;
+    setStatus('Sauvegarde de l’ancienne version sur GitHub…');
+    const backupPath=await backupCurrent(match);
+    setStatus('Envoi de la nouvelle version vers GitHub…');
+    const base64=await fileToBase64(file);
+    await putContent(match.path,base64,'Mise à jour de '+match.path,match.sha);
+    setStatus('✓ <b>'+esc(file.name)+'</b> a été remplacé dans <b>'+esc(match.path)+'</b>.<br>Ancienne version sauvegardée dans <span class="mono">'+esc(backupPath)+'</span>.<br>La mise à jour sera visible sur vos autres PC dès que GitHub Pages aura publié le nouveau commit.','ok');
+  }
+
+  detectBtn.addEventListener('click',()=>{detectRepo();saveConfig();});
+  testBtn.addEventListener('click',async()=>{try{testBtn.disabled=true;await testConnection();}catch(e){setStatus('Échec de la connexion : '+esc(e.message||e),'error');}finally{testBtn.disabled=false;}});
+  updateBtn.addEventListener('click',()=>{const c=config();if(!validConfig(c)){setStatus('Complétez d’abord les paramètres GitHub et le jeton.','warn');return;}input.click();});
+  input.addEventListener('change',async()=>{const f=input.files&&input.files[0];input.value='';if(!f)return;try{await updateSelectedFile(f);}catch(e){setStatus('Échec de la mise à jour : '+esc(e.message||e),'error');}finally{updateBtn.disabled=false;testBtn.disabled=false;}});
+  rememberEl.addEventListener('change',saveConfig);
+  [ownerEl,repoEl,branchEl,tokenEl].forEach(el=>el.addEventListener('change',saveConfig));
+
+  loadConfig();
+  if(!ownerEl.value&&!repoEl.value) detectRepo();
+})();
+</script>
+</body></html>
